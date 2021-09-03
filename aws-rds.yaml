@@ -1,0 +1,58 @@
+apiVersion: database.aws.crossplane.io/v1beta1
+kind: DBSubnetGroup
+metadata:
+  name: rds-subnet-group
+  namespace: crossplane-system
+spec:
+  forProvider:
+    region: eu-west-1
+    description: "crossplane Subnet group"
+    subnetIdRefs:
+      - name: crossplane-subnet-2
+      - name: crossplane-subnet-1
+  providerConfigRef:
+    name: awsconfig
+
+---
+
+apiVersion: database.aws.crossplane.io/v1beta1
+kind: RDSInstance
+metadata:
+  name: crossplane-rds
+  namespace: crossplane-system
+spec:
+  forProvider:
+    allocatedStorage: 50
+    autoMinorVersionUpgrade: true
+    applyModificationsImmediately: false
+    backupRetentionPeriod: 0
+    caCertificateIdentifier: rds-ca-2019
+    copyTagsToSnapshot: false
+    dbInstanceClass: db.t2.small
+    dbSubnetGroupName: rds-subnet-group
+    vpcSecurityGroupIDRefs:
+    - name: rds-access-sg
+    deletionProtection: false
+    enableIAMDatabaseAuthentication: false
+    enablePerformanceInsights: false
+    engine: mysql
+    region: eu-west-1
+    engineVersion: 5.6.35
+    finalDBSnapshotIdentifier: crossplane-test
+    licenseModel: general-public-license
+    masterUsername: admin
+    multiAZ: true
+    port: 3306
+    tags:
+    - key: Name
+      value: crossplane-rds
+    - key: Owner
+      value: Dhouha
+    publiclyAccessible: false
+    storageEncrypted: false
+    storageType: gp2
+  providerConfigRef:
+    name: awsconfig
+  writeConnectionSecretToRef:
+    name: crossplane-rds-conn-string
+    namespace: crossplane-system

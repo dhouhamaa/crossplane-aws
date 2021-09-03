@@ -1,0 +1,37 @@
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: InternetGateway
+metadata:
+  name: crossplane-internetgateway
+  namespace: crossplane-system
+spec:
+  forProvider:
+    region: eu-west-1
+    vpcIdRef:
+      name: crossplane-vpc
+  providerConfigRef:
+    name: awsconfig
+
+---
+
+
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: RouteTable
+metadata:
+  name: crossplane-routetable
+  namespace: crossplane-system
+spec:
+  forProvider:
+    region: eu-west-1
+    routes:
+      - destinationCidrBlock: 0.0.0.0/0
+        gatewayIdRef:
+          name: crossplane-internetgateway
+    associations:
+      - subnetIdRef:
+          name: crossplane-subnet-2
+      - subnetIdRef:
+          name: crossplane-subnet-1
+    vpcIdRef:
+      name: crossplane-vpc
+  providerConfigRef:
+    name: awsconfig

@@ -1,0 +1,19 @@
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: VPC
+metadata:
+  name: crossplane-vpc
+  namespace: crossplane-system
+spec:
+  forProvider:
+    region: eu-west-1
+    cidrBlock: 192.168.0.0/16
+    enableDnsSupport: true
+    enableDnsHostNames: true
+    tags:
+    - key: Owner
+      value: Dhouha
+    - key: Name
+      value: crossplane-vpc
+    instanceTenancy: default
+  providerConfigRef:
+    name: awsconfig

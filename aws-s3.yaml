@@ -1,0 +1,12 @@
+apiVersion: s3.aws.crossplane.io/v1beta1
+kind: Bucket
+metadata:
+  name: crossplane-bucket
+  namespace: crossplane-system
+spec:
+  deletionPolicy: Delete
+  forProvider:
+    acl: private
+    locationConstraint: eu-west-1
+  providerConfigRef:
+    name: awsconfig
